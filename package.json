@@ -1,0 +1,36 @@
+{
+  "name": "asr-js-sdk",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "browser": "./dist/umd/index.js"
+    }
+  },
+  "module": "./dist/esm/index.js",
+  "browser": "./dist/umd/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "rslib build",
+    "check": "biome check --write",
+    "dev": "rslib build --watch",
+    "format": "biome format --write",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "core-js": "3.43.0",
+    "whatwg-fetch": "3.6.20"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@rslib/core": "0.9.2",
+    "@types/node": "22.15.31",
+    "browserslist": "4.25.0",
+    "typescript": "5.8.3",
+    "vitest": "3.2.3"
+  }
+}
