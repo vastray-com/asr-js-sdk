@@ -1,13 +1,44 @@
 <!doctype html>
 <html lang = "en">
-<head>
-<meta charset = "UTF-8">
-             <meta name = "viewport"
-                   content = "width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-                         <meta http-equiv = "X-UA-Compatible" content = "ie=edge">
-             <title>Document</title>
-</head>
-<body>
-  <script src="http://127.0.0.1:8080/dist/umd/index.js" ></script>
-</body>
+  <head>
+    <meta charset = "UTF-8">
+    <meta name = "viewport" content = "width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv = "X-UA-Compatible" content = "ie=edge">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <button id="log-switch">开/关日志</button>
+    <button id="start-btn">开始 asr</button>
+    <button id="stop-btn">停止 asr</button>
+
+    <script src = "http://127.0.0.1:8080/dist/umd/index.js"></script>
+    <script>
+      const logSwitch = document.getElementById('log-switch');
+      const startBtn = document.getElementById('start-btn');
+      const stopBtn = document.getElementById('stop-btn');
+
+      logSwitch.addEventListener('click', () => {
+        otziASR.LOG = !otziASR.LOG;
+      });
+
+      startBtn.addEventListener('click', () => {
+        const id = Math.random().toString(36).substring(2, 15);
+        otziASR.start(id,{
+          onStarted:() => {
+            console.log('ASR 已启动，ID:', id);
+          },
+          onReceived:(sentence) => {
+            console.log('ASR 识别结果:', sentence);
+          }
+        });
+      });
+
+      stopBtn.addEventListener('click', () => {
+        otziASR.stop(() => {
+          console.log('OTZI ASR 已停止');
+        });
+      });
+    </script>
+  </body>
 </html>

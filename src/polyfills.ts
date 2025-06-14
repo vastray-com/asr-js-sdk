@@ -2,24 +2,6 @@
 import 'core-js/stable';
 import 'whatwg-fetch';
 
-// 解决 TypeScript 类型问题
-declare global {
-  interface Navigator {
-    webkitGetUserMedia?: (
-      constraints: MediaStreamConstraints,
-      successCallback: (stream: MediaStream) => void,
-      errorCallback: (error: Error) => void,
-    ) => void;
-    mozGetUserMedia?: typeof navigator.webkitGetUserMedia;
-    msGetUserMedia?: typeof navigator.webkitGetUserMedia;
-    getUserMedia?: typeof navigator.webkitGetUserMedia;
-  }
-
-  interface MediaDevices {
-    getUserMedia(constraints: MediaStreamConstraints): Promise<MediaStream>;
-  }
-}
-
 // 仅保留 getUserMedia 兼容处理
 if (navigator.mediaDevices === undefined) {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>

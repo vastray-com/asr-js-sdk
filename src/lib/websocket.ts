@@ -1,4 +1,4 @@
-type FN = () => void;
+import { otziConsole } from './log.ts';
 
 export type WebSocketOptions = {
   reconnectAttempts?: number;
@@ -10,7 +10,7 @@ export type WebSocketOptions = {
   onmessage?: (data: string) => void;
 };
 
-export class ASRClient {
+export class WSClient {
   private socket: WebSocket | null = null;
   private reconnectAttempts = 0;
   private readonly maxReconnectAttempts: number;
@@ -44,7 +44,7 @@ export class ASRClient {
       // 设置 WebSocket 事件处理
       this.socket.onopen = () => {
         this.reconnectAttempts = 0; // 重置重连计数
-        console.log('已连接到 WebSocket:', this.endpoint);
+        otziConsole.log('已连接到 WebSocket:', this.endpoint);
 
         this.onSocketOpen?.();
       };
@@ -52,29 +52,29 @@ export class ASRClient {
       this.socket.onclose = (event: CloseEvent) => {
         // 主动关闭的情况
         if (!this.isActive) {
-          console.log('WebSocket 已主动关闭');
+          otziConsole.log('WebSocket 已主动关闭');
           this.onSocketClose?.();
           return;
         }
 
         // 非主动关闭的情况
-        console.log(`WebSocket 连接关闭: ${event.code} ${event.reason}`);
+        otziConsole.log(`WebSocket 连接关闭: ${event.code} ${event.reason}`);
         this.handleReconnect();
       };
 
       this.socket.onerror = (error: Event) => {
-        console.error('WebSocket 连接错误:', error);
+        otziConsole.error('WebSocket 连接错误:', error);
         this.onSocketError?.(error.toString());
       };
 
       this.socket.onmessage = (event: MessageEvent) => {
-        console.log('收到 WebSocket 消息:', event.data);
+        otziConsole.log('收到 WebSocket 消息:', event.data);
         this.onSocketMessage?.(event.data);
       };
 
       this.isActive = true;
     } catch (e) {
-      console.error('创建 WebSocket 失败:', e);
+      otziConsole.error('创建 WebSocket 失败:', e);
       this.handleReconnect();
     }
   }
@@ -84,12 +84,12 @@ export class ASRClient {
 
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
-      console.log(
+      otziConsole.log(
         `尝试重新连接... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`,
       );
       setTimeout(() => this.connect(), this.reconnectInterval);
     } else {
-      console.error('达到最大重连次数，放弃连接');
+      otziConsole.error('达到最大重连次数，放弃连接');
     }
   }
 
@@ -99,7 +99,7 @@ export class ASRClient {
       this.socket.send(data);
       return true;
     }
-    console.warn('WebSocket 未连接，无法发送数据');
+    otziConsole.warn('WebSocket 未连接，无法发送数据');
     return false;
   }
 
@@ -111,6 +111,8 @@ export class ASRClient {
       this.socket = null;
     }
   }
+
+  // 主动停止
 
   // 获取连接状态
   get connectionState(): number {

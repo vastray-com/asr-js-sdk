@@ -5,7 +5,7 @@ export default defineConfig({
     // UMD 格式（用于直接在浏览器中通过 <script> 标签加载）
     {
       format: 'umd',
-      syntax: ['chrome >= 53', 'firefox >= 40', 'safari >= 11', 'ie 11'],
+      syntax: ['chrome >= 53', 'firefox >= 40', 'safari >= 11'],
       umdName: 'vastASR',
       output: {
         distPath: {
@@ -16,7 +16,7 @@ export default defineConfig({
     // ESM 格式（用于现代打包工具和浏览器）
     {
       format: 'esm',
-      syntax: ['chrome >= 53', 'firefox >= 40', 'safari >= 11', 'ie 11'],
+      syntax: ['chrome >= 53', 'firefox >= 40', 'safari >= 11'],
       output: {
         distPath: {
           root: './dist/esm',
@@ -30,30 +30,6 @@ export default defineConfig({
     minify: true,
     sourceMap: true,
   },
-  // 使用 Rsbuild 内置的转译配置
-  // tools: {
-  //   swc: {
-  //     env: {
-  //       mode: 'usage',
-  //       coreJs: '3',
-  //       // targets: {
-  //       //   browsers: [
-  //       //     '> 0.2%',
-  //       //     'last 4 versions',
-  //       //     'Firefox ESR',
-  //       //     'not dead',
-  //       //     'ie 11',
-  //       //   ],
-  //       // },
-  //     },
-  //     jsc: {
-  //       parser: {
-  //         syntax: 'typescript',
-  //         tsx: false,
-  //       },
-  //     },
-  //   },
-  // },
   // 添加 polyfill 配置
   source: {
     preEntry: './src/polyfills.ts',

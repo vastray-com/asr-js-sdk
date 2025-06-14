@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2015", "ES2016", "ES2017"],
+    "downlevelIteration": true,
     "module": "ESNext",
     "noEmit": true,
     "strict": true,
