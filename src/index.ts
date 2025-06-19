@@ -9,7 +9,7 @@ let recorder: Recorder | null = null;
 let onStopped: ASROnStopped | null = null;
 
 window.otziASR = {
-  LOG: true,
+  LOG: false,
   start: async (record_id, opts) => {
     if (!record_id) {
       otziConsole.error('缺少 record_id 参数');
@@ -25,7 +25,9 @@ window.otziASR = {
     recorder = new Recorder({
       onStarted: () => otziConsole.log('Recorder started'),
       onChunked: (data) =>
-        client?.send(JSON.stringify({ event: 'recording', data })),
+        client &&
+        client.connectionState === WebSocket.OPEN &&
+        client.send(JSON.stringify({ event: 'recording', data })),
     });
 
     // 尝试启动录音
@@ -38,7 +40,7 @@ window.otziASR = {
     }
 
     // 构造 WebSocket URL
-    const wsUrl = `${APP_ENV.ASR_URL}?record_id=${record_id}&device_name=${recorder.device?.label ?? 'default'}&sep_roles=false`;
+    const wsUrl = `${APP_ENV.ASR_URL}?record_id=${record_id}&device_name=${recorder.device?.label ?? 'default'}&sep_roles=true`;
 
     client = new WSClient(wsUrl, {
       onopen: () => {
@@ -72,7 +74,9 @@ window.otziASR = {
   stop: async (cb) => {
     if (recorder) {
       await recorder.stop();
-      client?.send(JSON.stringify({ event: 'stop' }));
+      client &&
+        client.connectionState === WebSocket.OPEN &&
+        client.send(JSON.stringify({ event: 'stop' }));
       onStopped = cb || null;
     } else {
       otziConsole.warn('没有正在进行的录音');
