@@ -24,13 +24,19 @@
 
       startBtn.addEventListener('click', () => {
         const id = Math.random().toString(36).substring(2, 15);
-        otziASR.start(id,{
+        otziASR.start(id, {
           onStarted:() => {
             console.log('ASR 已启动，ID:', id);
           },
-          onReceived:(sentence) => {
+          onRecognized:(sentence) => {
             console.log('ASR 识别结果:', sentence);
-          }
+          },
+          onTips:(tips) => {
+            console.log('ASR 提问建议:', tips);
+          },
+          onMedicalRecord:(medicalRecord) => {
+            console.log('ASR 病历生成结果:', medicalRecord);
+          },
         });
       });
 

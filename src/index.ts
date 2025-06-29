@@ -55,15 +55,29 @@ window.otziASR = {
       onmessage: (message: string) => {
         const msg = JSON.parse(message) as WSMessage;
         otziConsole.info('WebSocket 收到消息:', msg);
-        if (msg.event === 'recognized') {
-          otziConsole.log('received', msg.data);
-          opts?.onReceived?.(msg.data);
-        } else if (msg.event === 'done') {
-          client?.disconnect();
-          client = null;
-          recorder = null;
-          onStopped?.();
-          return Promise.resolve();
+        switch (msg.event) {
+          // ASR 结束
+          case 'done':
+            client?.disconnect();
+            client = null;
+            recorder = null;
+            onStopped?.();
+            return Promise.resolve();
+          // ASR 识别结果
+          case 'recognized':
+            otziConsole.log('recognized: ', msg.data);
+            opts?.onRecognized?.(msg.data);
+            break;
+          // ASR 问题提示
+          case 'tips':
+            otziConsole.log('tips:', msg.data);
+            opts?.onTips?.(msg.data);
+            break;
+          // ASR 病历生成结果
+          case 'medical_record':
+            otziConsole.log('medical record: ', msg.data);
+            opts?.onMedicalRecord?.(msg.data);
+            break;
         }
       },
     });

@@ -2,10 +2,14 @@ type FN = () => void;
 
 type ASROnStopped = () => void;
 type ASROnStarted = () => void;
-type ASROnReceived = (data: Sentence) => void;
+type ASROnRecognized = (data: Sentence) => void;
+type ASROnTips = (data: string[]) => void;
+type ASROnMedicalRecord = (data: Record<string, string>) => void;
 type StartOptions = {
   onStarted?: ASROnStarted;
-  onReceived?: ASROnReceived;
+  onRecognized?: ASROnRecognized;
+  onTips?: ASROnTips;
+  onMedicalRecord?: ASROnMedicalRecord;
 };
 
 type StartASR = (record_id: string, opts?: StartOptions) => Promise<void>;
@@ -26,7 +30,24 @@ type Sentence = {
   words: Words;
 };
 type Sentences = Sentence[];
-type WSMessage = {
+type WSMessage =
+  | WSDoneMessage
+  | WSRecognizedMessage
+  | WSTipsMessage
+  | WSMedicalRecordMessage;
+
+type WSDoneMessage = {
+  event: 'done';
+};
+type WSRecognizedMessage = {
   event: 'recognized';
   data: Sentence;
+};
+type WSTipsMessage = {
+  event: 'tips';
+  data: string[];
+};
+type WSMedicalRecordMessage = {
+  event: 'medical_record';
+  data: Record<string, string>;
 };
