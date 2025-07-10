@@ -78,6 +78,17 @@ window.otziASR = {
             otziConsole.log('medical record: ', msg.data);
             opts?.onMedicalRecord?.(msg.data);
             break;
+          // ASR 被停止消息
+          case 'terminated':
+            otziConsole.log('terminal:', msg.data);
+            if (recorder) {
+              recorder.stop();
+            }
+            client?.disconnect();
+            client = null;
+            recorder = null;
+            opts?.onTerminated?.(msg.data);
+            return Promise.resolve();
         }
       },
     });

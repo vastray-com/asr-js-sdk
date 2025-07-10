@@ -5,11 +5,13 @@ type ASROnStarted = () => void;
 type ASROnRecognized = (data: Sentence) => void;
 type ASROnTips = (data: string[]) => void;
 type ASROnMedicalRecord = (data: Record<string, string>) => void;
+type ASROnTerminated = (data: string) => void;
 type StartOptions = {
   onStarted?: ASROnStarted;
   onRecognized?: ASROnRecognized;
   onTips?: ASROnTips;
   onMedicalRecord?: ASROnMedicalRecord;
+  onTerminated?: ASROnTerminated;
 };
 
 type StartASR = (record_id: string, opts?: StartOptions) => Promise<void>;
@@ -34,7 +36,8 @@ type WSMessage =
   | WSDoneMessage
   | WSRecognizedMessage
   | WSTipsMessage
-  | WSMedicalRecordMessage;
+  | WSMedicalRecordMessage
+  | WSTerminatedMessage;
 
 type WSDoneMessage = {
   event: 'done';
@@ -50,4 +53,8 @@ type WSTipsMessage = {
 type WSMedicalRecordMessage = {
   event: 'medical_record';
   data: Record<string, string>;
+};
+type WSTerminatedMessage = {
+  event: 'terminated';
+  data: string;
 };
