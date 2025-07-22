@@ -1,4 +1,3 @@
-import { APP_ENV } from './constant';
 import { otziConsole } from './lib/log.ts';
 import { Recorder } from './lib/recorder';
 import { WSClient } from './lib/websocket';
@@ -10,10 +9,10 @@ let onStopped: ASROnStopped | null = null;
 
 window.otziASR = {
   LOG: false,
-  start: async (record_id, opts) => {
-    if (!record_id) {
-      otziConsole.error('缺少 record_id 参数');
-      return Promise.reject(new Error('缺少 record_id 参数'));
+  start: async (record_id,url, opts) => {
+    if (!record_id.trim()|| !url.trim()) {
+      otziConsole.error('缺少 record_id 或 url 参数');
+      return Promise.reject(new Error('缺少 record_id 或 url 参数'));
     }
 
     // 如果已经有一个 WebSocket 客户端实例，先断开连接
@@ -40,7 +39,7 @@ window.otziASR = {
     }
 
     // 构造 WebSocket URL
-    const wsUrl = `${APP_ENV.ASR_URL}?record_id=${record_id}&device_name=${recorder.device?.label ?? 'default'}&sep_roles=true`;
+    const wsUrl = `${url}?record_id=${record_id}&device_name=${recorder.device?.label ?? 'default'}&sep_roles=true`;
 
     client = new WSClient(wsUrl, {
       onopen: () => {

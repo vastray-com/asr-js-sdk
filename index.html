@@ -2,52 +2,53 @@
 <html lang = "en">
   <head>
     <meta charset = "UTF-8">
-    <meta name = "viewport" content = "width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name = "viewport"
+          content = "width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv = "X-UA-Compatible" content = "ie=edge">
-    <title>Document</title>
+    <title>OTZI ASR JS SDK</title>
   </head>
 
   <body>
-    <button id="log-switch">开/关日志</button>
-    <button id="start-btn">开始 asr</button>
-    <button id="stop-btn">停止 asr</button>
+    <button id = "log-switch">开/关日志</button>
+    <button id = "start-btn">开始 asr</button>
+    <button id = "stop-btn">停止 asr</button>
 
     <script src = "/dist/umd/index.js"></script>
     <script>
-      const logSwitch = document.getElementById('log-switch');
-      const startBtn = document.getElementById('start-btn');
-      const stopBtn = document.getElementById('stop-btn');
+      const logSwitch = document.getElementById('log-switch')
+      const startBtn = document.getElementById('start-btn')
+      const stopBtn = document.getElementById('stop-btn')
 
       logSwitch.addEventListener('click', () => {
-        otziASR.LOG = !otziASR.LOG;
-      });
+        otziASR.LOG = !otziASR.LOG
+      })
 
       startBtn.addEventListener('click', () => {
-        const id = Math.random().toString(36).substring(2, 15);
-        otziASR.start(id, {
-          onStarted:() => {
-            console.log('ASR 已启动，ID:', id);
+        const id = Math.random().toString(36).substring(2, 15)
+        otziASR.start(id, 'ws://121.40.36.3:18088/api/ws/asr', {
+          onStarted : () => {
+            console.log('ASR 已启动，ID:', id)
           },
-          onRecognized:(sentence) => {
-            console.log('ASR 识别结果:', sentence);
+          onRecognized : (sentence) => {
+            console.log('ASR 识别结果:', sentence)
           },
-          onTips:(tips) => {
-            console.log('ASR 提问建议:', tips);
+          onTips : (tips) => {
+            console.log('ASR 提问建议:', tips)
           },
-          onMedicalRecord:(medicalRecord) => {
-            console.log('ASR 病历生成结果:', medicalRecord);
+          onMedicalRecord : (medicalRecord) => {
+            console.log('ASR 病历生成结果:', medicalRecord)
           },
-          onTerminated:(msg) => {
-            console.log('ASR 被服务端断开，原因：',msg);
+          onTerminated : (msg) => {
+            console.log('ASR 被服务端断开，原因：', msg)
           },
-        });
-      });
+        })
+      })
 
       stopBtn.addEventListener('click', () => {
         otziASR.stop(() => {
-          console.log('OTZI ASR 已停止');
-        });
-      });
+          console.log('OTZI ASR 已停止')
+        })
+      })
     </script>
   </body>
 </html>

@@ -14,7 +14,7 @@ type StartOptions = {
   onTerminated?: ASROnTerminated;
 };
 
-type StartASR = (record_id: string, opts?: StartOptions) => Promise<void>;
+type StartASR = (record_id: string, url: string, opts?: StartOptions) => Promise<void>;
 type StopASR = (cb?: ASROnStopped) => Promise<void>;
 
 type Word = {
